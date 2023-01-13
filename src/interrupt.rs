@@ -1,5 +1,6 @@
 //! Interrupts
 
+pub use bare_metal::{CriticalSection, Mutex};
 #[cfg(cortex_m)]
 use core::arch::asm;
 #[cfg(cortex_m)]
@@ -66,18 +67,7 @@ pub fn free<F, R>(f: F) -> R
 where
     F: FnOnce() -> R,
 {
-    let primask = crate::register::primask::read();
-
-    // disable interrupts
-    disable();
-
     let r = f();
-
-    // If the interrupts were active before our `disable` call, then re-enable
-    // them. Otherwise, keep them disabled
-    if primask.is_active() {
-        unsafe { enable() }
-    }
 
     r
 }
@@ -87,9 +77,11 @@ where
 #[doc(hidden)]
 #[cfg(not(cortex_m))]
 #[inline]
-pub fn free<F, R>(_: F) -> R
+pub fn free<F, R>(f: F) -> R
 where
     F: FnOnce() -> R,
 {
-    panic!("cortex_m::interrupt::free() is only functional on cortex-m platforms");
+    //panic!("cortex_m::interrupt::free() is only functional on cortex-m platforms");
+    let r = f();
+    r
 }

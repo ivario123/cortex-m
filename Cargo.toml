@@ -21,6 +21,7 @@ critical-section = "1.0.0"
 volatile-register = "0.2.0"
 bitfield = "0.13.2"
 embedded-hal = "0.2.4"
+bare-metal = "1.0.0"
 
 [dependencies.serde]
 version = "1"
